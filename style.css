@@ -1,0 +1,120 @@
+* {
+  padding: 0;
+  box-sizing: border-box;
+  margin: 5px 0;
+  text-transform: uppercase;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  
+}
+
+body {
+  background-color: #767467;
+  color: #130417;
+}
+
+.cart_wrapper {
+  width: 80%;
+  background-color: #b2e3b3;
+  margin: auto;
+  border: 5px solid #130417;
+  border-radius: 10px;
+}
+
+h1 {
+  text-align: center;
+  padding: 20px;
+  color: #14552e;
+}
+
+.book {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 94%;
+  margin: auto;
+  text-align: center;
+  border: 1px solid #130417;
+  border-radius: 10px;
+  background-color: #c9b294;
+  margin-bottom: 20px;
+  padding: 5px;
+}
+
+img {
+  width: 50px;
+  border: 2px solid #130417;
+}
+
+.book_year {
+  font-weight: 400;
+}
+
+
+.book_quantity {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 20px;
+}
+
+.book_counter input {
+  width: 50px;
+  height: 30px;
+}
+
+.book_deleting {
+  background-color: #dea67e;
+  padding: 0 6px;
+  border-radius: 50%;
+}
+
+.book_deleting:hover {
+  background-color: #3da073;
+  /* background-color: #ba8f78; */
+}
+
+.book_deleting i {
+  font-size: 16px;
+}
+
+.book_price {
+  color:#14552e;
+  font-weight: 700;
+}
+
+.cart_total {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: baseline;
+}
+
+.cart_total .book_price {
+  font-size: 20px;
+}
+
+.buy_button {
+  width: 100px;
+  height: 30px;
+  background-color: #3da073;
+  border: 2px solid #130417;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.buy_button:hover {
+  background-color: #3da073;
+  background-color: #dea67e;
+}
+
+.empty_cart {
+  color: rgb(226, 208, 90);
+  font-size: 24px;
+  background-color: #ba8f78;
+  width: 50%;
+  padding: 10px;
+  border: 2px solid #130417;
+  border-radius: 10px;
+  text-align: center;
+  margin: auto;
+}
