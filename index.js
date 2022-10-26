@@ -101,11 +101,18 @@ const addCartTotal = () => {
 };
 addCartTotal();
 
+const renderCartTotal = () => {
+  let cartTotal = getCartBookTotal(allBooks);
+  let totalPrice = document.querySelector('.total_price');
+  totalPrice.innerHTML = `${cartTotal.toFixed(2)}`;
+};
+
 const deleteBook = () => {
   for (let elem of allBooks) {
     let deleteBookButton = elem.querySelector('.book_deleting');
     deleteBookButton.addEventListener('click', function (event) {
       elem.remove();
+      renderCartTotal();
       if (allBooks.length <= 0) {
         const heading = document.querySelector('h1');
         heading.insertAdjacentHTML(
@@ -120,23 +127,12 @@ const deleteBook = () => {
   }
 };
 deleteBook();
-//каждый обработчик в отдельную функцию
-//добавить функцию которая будет запускать цикл с функциями-обработчиками
+
 const validateBookQuantity = () => {
   const inputs = document.querySelectorAll('input');
   Array.from(inputs).forEach((input) => {
     const min = +input.min;
     const max = +input.max;
-
-    input.addEventListener('focus', (event) => {
-      const value = +event.target.value;
-      //можно вынести в отдельную функцию:
-      if (value > max) {
-        input.value = max;
-      } else if (value < min) {
-        input.value = min;
-      }
-    });
 
     input.addEventListener('blur', (event) => {
       const value = +event.target.value;
@@ -149,33 +145,27 @@ const validateBookQuantity = () => {
       if (value < min) {
         input.value = min;
       }
+      renderCartTotal();
+    });
+
+    input.addEventListener('change', function (event) {
+      if (event.target.closest('[value]')) {
+        renderCartTotal();
+      }
     });
   });
 };
 validateBookQuantity();
 
-const renderCartTotal = () => {
-  let cartTotal = getCartBookTotal(allBooks);
-  let totalPrice = document.querySelector('.total_price');
-  totalPrice.innerHTML = `${cartTotal.toFixed(2)}`;
-};
-
-for (elem of allBooks) {
-  let deleteBookButton = elem.querySelector('.book_deleting');
-  deleteBookButton.onclick = function () {
-    renderCartTotal();
-  };
-}
-for (elem of allBooks) {
-  let cartInput = elem.querySelector('input');
-  cartInput.addEventListener('change', function (event) {
-    if (event.target.closest('[value]')) {
-      renderCartTotal();
+const handlesEventsBuyButton = () => {
+  const buyButton = document.querySelector('.buy_button');
+  buyButton.addEventListener('click', function (event) {
+    if (getCartBookTotal(allBooks) == 0) {
+      buyButton.setAttribute('hidden', 'true');
+    } else {
+      alert('Спасибо за покупку!');
+      console.log(allBooks.length);
     }
   });
-}
-
-const cartBuyButton = document.querySelector('.buy_button');
-cartBuyButton.addEventListener('click', function (event) {
-  alert('Спасибо за покупку!');
-});
+};
+handlesEventsBuyButton();
