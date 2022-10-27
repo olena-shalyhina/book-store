@@ -1,171 +1,53 @@
-let books = [
-  {
-    title: '451° по Фаренгейту',
-    year: 2008,
-    author: 'Рэй Брэдбери',
-    imageUrl:
-      'https://readrate.com/img/pictures/book/292/29286/29286/w240h400-cc0528ab.jpg',
-    price: 12.5,
-    quantity: 5,
-  },
-  {
-    title: 'Маленький принц',
-    year: 1948,
-    author: 'Антуан де Сент-Экзюпери',
-    imageUrl:
-      'https://readrate.com/img/pictures/book/293/29327/29327/w240h400-7e9028bd.jpg',
-    price: 3.99,
-    quantity: 3,
-  },
-  {
-    title: 'Три товарища',
-    year: 1967,
-    author: 'Эрих Мария Ремарк',
-    imageUrl:
-      'https://readrate.com/img/pictures/book/338/33800/33800/w240h400-0cdb782c.jpg',
-    price: 9,
-    quantity: 4,
-  },
-];
-
-//заменить на div body
-const bodyElement = document.body;
-const allBooks = document.getElementsByClassName('book');
-
-const addCartWrapper = () => {
-  bodyElement.innerHTML = `
-    <div class="cart_wrapper">
-      <h1 class="cart_name">Корзина</h1>
-    </div>
+// import { books, allBooks, getCartBookTotal } from './cart.js';
+// console.log(getCartBookTotal(allBooks));
+// console.log(books);
+const containerElement = document.querySelector('.container');
+const addManu = () => {
+  containerElement.innerHTML = `
+  <div class="menu">
+    <button type="button" class="menu_button">
+      <span>Книги</span>
+    </button>
+    <ul class="menu_list">
+      <li><a href="" class="menu_link">Детективы</a></li>
+      <li><a href="" class="menu_link">Фантастика</a></li>
+      <li><a href="" class="menu_link">Боевик, триллер</a></li>
+      <li><a href="" class="menu_link">Романы</a></li>
+    </ul>
+  </div>
   `;
 };
-addCartWrapper();
-const addBook = (arr) => {
-  for (let i = 0; i < arr.length; i++) {
-    if (books[i].quantity) {
-      const heading = document.querySelector('h1');
-      heading.insertAdjacentHTML(
-        'afterend',
-        `
-          <div class="book">
-            <img src="${books[i].imageUrl}">
-            <div class="book_information">
-              <h3 class="book_name">${books[i].title} (
-                <span class="book_year">${books[i].year}</span> )
-              </h3>
-              <p class="book_author">${books[i].author}</p>
-              <p class="book_price">&#36;<span>${books[i].price.toFixed(
-                2
-              )}</span></p> 
-            </div>
-            <div class="book_quantity">
-              <div class="book_counter">
-                <input type="number" min="0" max="${
-                  books[i].quantity
-                }" value="${books[i].quantity}">
-              </div>
-              <button class="book_deleting">
-                <i class="fa fa-trash-o" aria-hidden="true"></i>
-              </button>
-            </div>
-          </div>
-        `
-      );
-    }
-  }
-};
-addBook(books);
+addManu();
 
-const getCartBookTotal = (collection) => {
-  let result = 0;
-  for (elem of collection) {
-    let bookPrice = elem.querySelector('.book_price span');
-    let input = elem.querySelector('input');
-    result = result + +bookPrice.innerHTML * +input.value;
-  }
-  return result;
-};
-
-const addCartTotal = () => {
-  const cartTotal = getCartBookTotal(allBooks).toFixed(2);
-  const cartWrapper = document.querySelector('.cart_wrapper');
-  cartWrapper.insertAdjacentHTML(
-    'beforeend',
-    `<div class="cart_total">
-      <p class="book_price">Всего: &#36;
-        <span class="total_price">${cartTotal}</span>
-      </p>
-      <button class="buy_button">Купить</button> 
-    </div>`
+const addInputGroup = () => {
+  const menu = document.querySelector('.menu');
+  menu.insertAdjacentHTML(
+    'afterend',
+    `
+      <div class="input_group">
+        <input type="text" name="search" placeholder="Поиск книги по названию">
+        <button type="button" class="button_search">
+        <i class="fas fa-search"></i>
+        </button> 
+      </div>
+    `
   );
 };
-addCartTotal();
+addInputGroup();
+console.log(containerElement);
 
-const renderCartTotal = () => {
-  let cartTotal = getCartBookTotal(allBooks);
-  let totalPrice = document.querySelector('.total_price');
-  totalPrice.innerHTML = `${cartTotal.toFixed(2)}`;
+const addButtonGoToCart = () => {
+  const buttonGoToCart = document.querySelector('.input_group');
+  buttonGoToCart.insertAdjacentHTML(
+    'afterend',
+    `
+      <div class='go_to_cart'>
+        <i class="fas fa-shopping-cart"></i>
+        <span>ТОВАРОВ:</span>
+        <span>0</span>
+        <span>(&#36 0,00)</span>
+      </div>
+    `
+  );
 };
-
-const deleteBook = () => {
-  for (let elem of allBooks) {
-    let deleteBookButton = elem.querySelector('.book_deleting');
-    deleteBookButton.addEventListener('click', function (event) {
-      elem.remove();
-      renderCartTotal();
-      if (allBooks.length <= 0) {
-        const heading = document.querySelector('h1');
-        heading.insertAdjacentHTML(
-          'afterend',
-          `
-          <div class="empty_cart">
-          Ваша корзина пуста
-          </div>`
-        );
-      }
-    });
-  }
-};
-deleteBook();
-
-const validateBookQuantity = () => {
-  const inputs = document.querySelectorAll('input');
-  Array.from(inputs).forEach((input) => {
-    const min = +input.min;
-    const max = +input.max;
-
-    input.addEventListener('blur', (event) => {
-      const value = +event.target.value;
-      if (Math.floor(value) != value) {
-        input.value = Math.floor(input.value);
-      }
-      if (value > max) {
-        input.value = max;
-      }
-      if (value < min) {
-        input.value = min;
-      }
-      renderCartTotal();
-    });
-
-    input.addEventListener('change', function (event) {
-      if (event.target.closest('[value]')) {
-        renderCartTotal();
-      }
-    });
-  });
-};
-validateBookQuantity();
-
-const handlesEventsBuyButton = () => {
-  const buyButton = document.querySelector('.buy_button');
-  buyButton.addEventListener('click', function (event) {
-    if (getCartBookTotal(allBooks) == 0) {
-      buyButton.setAttribute('hidden', 'true');
-    } else {
-      alert('Спасибо за покупку!');
-      console.log(allBooks.length);
-    }
-  });
-};
-handlesEventsBuyButton();
+addButtonGoToCart();

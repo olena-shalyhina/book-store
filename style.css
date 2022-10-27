@@ -1,17 +1,90 @@
 * {
-  padding: 0;
   box-sizing: border-box;
-  margin: 5px 0;
+  padding: 0;
+  margin: 0;
   text-transform: uppercase;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-  
 }
 
 body {
   background-color: #767467;
   color: #130417;
 }
+.container {
+  margin: 20px;
+  display: flex;
+}
+/* МЕНЮ */
+.menu {
+  width: 250px;
+}
+.menu_button {
+  width: 100%;
+  height: 40px;
+  background-color: #b2e3b3;
+  border: 2px solid #2c0936;
+  color: #14552e;
+  font-size: 1.5em;
+  font-weight: 700;
+}
+.menu_list {
+  border: 2px solid #2c0936;
+  background-color: #c9b294;
+  list-style-type: none;
+  padding: 0;
+}
+.menu_link {
+  text-decoration: none;
+  padding: 10px;
+  color: #2c0936;
+  display: inline-block;
+  font-weight: 700;
+}
+.menu_link:hover {
+  color: #14552e;
+  padding-left: 30px;
+}
 
+/* БЛОК ПОИСКА */
+.input_group {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  column-gap: 2px;
+}
+.input_group input:first-child {
+  width: 90%;
+  height: 40px;
+  border: 2px solid #2c0936;
+  border-radius: 5px;
+  padding-left: 20px;
+}
+.button_search {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #2c0936;
+  border-radius: 5px;
+  background-color: #b2e3b3;
+}
+
+.input_group i {
+  font-size: 20px;
+  color: #2c0936;
+}
+
+/* КНОПКА ПЕРЕХОДА В КОРЗИНУ */
+.go_to_cart {
+  width: 20%;
+  height: 40px;
+  background-color: #ba8f78;
+  border: 2px solid #2c0936;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* КОРЗИНА */
 .cart_wrapper {
   width: 80%;
   background-color: #b2e3b3;
@@ -29,15 +102,15 @@ h1 {
 .book {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 94%;
   margin: auto;
   text-align: center;
   border: 1px solid #130417;
   border-radius: 10px;
   background-color: #c9b294;
-  margin-bottom: 20px;
-  padding: 5px;
+  margin-bottom: 10px;
+  padding: 15px;
 }
 
 img {
@@ -48,7 +121,6 @@ img {
 .book_year {
   font-weight: 400;
 }
-
 
 .book_quantity {
   display: flex;
@@ -64,7 +136,7 @@ img {
 
 .book_deleting {
   background-color: #dea67e;
-  padding: 0 6px;
+  padding: 5px 6px;
   border-radius: 50%;
 }
 
@@ -78,7 +150,7 @@ img {
 }
 
 .book_price {
-  color:#14552e;
+  color: #14552e;
   font-weight: 700;
 }
 
@@ -87,6 +159,7 @@ img {
   flex-direction: row;
   justify-content: space-around;
   align-items: baseline;
+  margin-bottom: 10px;
 }
 
 .cart_total .book_price {
