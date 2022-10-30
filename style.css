@@ -15,7 +15,7 @@ body {
   display: flex;
 }
 /* МЕНЮ */
-.menu {
+.vertical_menu {
   width: 250px;
 }
 .menu_button {
@@ -45,9 +45,22 @@ body {
   padding-left: 30px;
 }
 
-/* БЛОК ПОИСКА */
+.main_block {
+  width: 80%;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* НАВИГАЦИОННЫЙ БЛОК */
+.nav_block {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 .input_group {
-  width: 60%;
+  width: 100%;
   display: flex;
   justify-content: center;
   column-gap: 2px;
@@ -72,9 +85,25 @@ body {
   color: #2c0936;
 }
 
+/* БЛОК С КНИГАМИ */
+.all_books {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.all_books .book {
+  width: 350px;
+  height: 170px;
+}
+
+.all_books .book img {
+  width: 20%;
+}
+
 /* КНОПКА ПЕРЕХОДА В КОРЗИНУ */
 .go_to_cart {
-  width: 20%;
+  width: 240px;
   height: 40px;
   background-color: #ba8f78;
   border: 2px solid #2c0936;
@@ -136,13 +165,12 @@ img {
 
 .book_deleting {
   background-color: #dea67e;
-  padding: 5px 6px;
+  padding: 10px;
   border-radius: 50%;
 }
 
 .book_deleting:hover {
   background-color: #3da073;
-  /* background-color: #ba8f78; */
 }
 
 .book_deleting i {

@@ -1,36 +1,10 @@
-let books = [
-  {
-    title: '451° по Фаренгейту',
-    year: 2008,
-    author: 'Рэй Брэдбери',
-    imageUrl:
-      'https://readrate.com/img/pictures/book/292/29286/29286/w240h400-cc0528ab.jpg',
-    price: 12.5,
-    quantity: 5,
-  },
-  {
-    title: 'Маленький принц',
-    year: 1948,
-    author: 'Антуан де Сент-Экзюпери',
-    imageUrl:
-      'https://readrate.com/img/pictures/book/293/29327/29327/w240h400-7e9028bd.jpg',
-    price: 3.99,
-    quantity: 3,
-  },
-  {
-    title: 'Три товарища',
-    year: 1967,
-    author: 'Эрих Мария Ремарк',
-    imageUrl:
-      'https://readrate.com/img/pictures/book/338/33800/33800/w240h400-0cdb782c.jpg',
-    price: 9,
-    quantity: 4,
-  },
-];
+'use strict';
+
+import { books } from './books.js';
 
 //заменить на div body
 const containerElement = document.querySelector('.container');
-const allBooks = document.getElementsByClassName('book');
+const allBooksInTheCart = document.getElementsByClassName('book');
 
 const addCartWrapper = () => {
   containerElement.innerHTML = `
@@ -40,6 +14,7 @@ const addCartWrapper = () => {
   `;
 };
 addCartWrapper();
+
 const addBook = (arr) => {
   for (let i = 0; i < arr.length; i++) {
     if (books[i].quantity) {
@@ -48,7 +23,7 @@ const addBook = (arr) => {
         'afterend',
         `
           <div class="book">
-            <img src="${books[i].imageUrl}">
+            <img src="${books[i].imageUrl}" alt="Книга">
             <div class="book_information">
               <h3 class="book_name">${books[i].title} (
                 <span class="book_year">${books[i].year}</span> )
@@ -78,7 +53,7 @@ addBook(books);
 
 const getCartBookTotal = (collection) => {
   let result = 0;
-  for (elem of collection) {
+  for (let elem of collection) {
     let bookPrice = elem.querySelector('.book_price span');
     let input = elem.querySelector('input');
     result = result + +bookPrice.innerHTML * +input.value;
@@ -87,7 +62,7 @@ const getCartBookTotal = (collection) => {
 };
 
 const addCartTotal = () => {
-  const cartTotal = getCartBookTotal(allBooks).toFixed(2);
+  const cartTotal = getCartBookTotal(allBooksInTheCart).toFixed(2);
   const cartWrapper = document.querySelector('.cart_wrapper');
   cartWrapper.insertAdjacentHTML(
     'beforeend',
@@ -104,18 +79,18 @@ const addCartTotal = () => {
 addCartTotal();
 
 const renderCartTotal = () => {
-  let cartTotal = getCartBookTotal(allBooks);
+  let cartTotal = getCartBookTotal(allBooksInTheCart);
   let totalPrice = document.querySelector('.total_price');
   totalPrice.innerHTML = `${cartTotal.toFixed(2)}`;
 };
 
 const deleteBook = () => {
-  for (let elem of allBooks) {
+  for (let elem of allBooksInTheCart) {
     let deleteBookButton = elem.querySelector('.book_deleting');
     deleteBookButton.addEventListener('click', function (event) {
       elem.remove();
       renderCartTotal();
-      if (allBooks.length <= 0) {
+      if (allBooksInTheCart.length <= 0) {
         const heading = document.querySelector('h1');
         heading.insertAdjacentHTML(
           'afterend',
@@ -163,14 +138,13 @@ validateBookQuantity();
 const handlesEventsBuyButton = () => {
   const buyButton = document.querySelector('.buy_button');
   buyButton.addEventListener('click', function (event) {
-    if (getCartBookTotal(allBooks) == 0) {
+    if (getCartBookTotal(allBooksInTheCart) == 0) {
       buyButton.setAttribute('hidden', 'true');
     } else {
       alert('Спасибо за покупку!');
-      console.log(allBooks.length);
     }
   });
 };
 handlesEventsBuyButton();
 
-export { books, allBooks, getCartBookTotal };
+export { allBooksInTheCart, getCartBookTotal };
