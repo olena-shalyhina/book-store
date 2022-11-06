@@ -8,18 +8,43 @@ const cartTotal = getCartBookTotal(allBooksInTheCart);
 const addVerticalManu = () => {
   containerElement.innerHTML = `
     <div class="vertical_menu">
-      <button type="button" class="menu_button">
+      <button type="button" class="vertical_menu_button">
         <span>Книги</span>
       </button>
-      <ul class="menu_list">
-        <li><a href="" class="menu_link">Боевик, триллер</a></li>
-        <li><a href="" class="menu_link">Детективы</a></li>
-        <li><a href="" class="menu_link">Комиксы </a></li>
-        <li><a href="" class="menu_link">Любовные романы </a></li>
-        <li><a href="" class="menu_link">Приключения </a></li>
-        <li><a href="" class="menu_link">Фантастика</a></li>
-        <li><a href="" class="menu_link">Детская литература </a></li>
-      </ul>
+      <div class="filters">
+        <fieldset>
+          <legend>Жанр</legend>
+          <div>
+            <input type="checkbox" id="novels" name="novels">
+            <label for="novels">Романы</label>
+          </div>
+          <div>
+            <input type="checkbox" id="fiction" name="fiction">
+            <label for="fiction">Фантастика</label>
+          </div>
+          <div>
+            <input type="checkbox" id="fairy_tales" name="fairy_tales">
+            <label for="fairy_tales">Сказки</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Цена</legend>
+          <div>
+            <label for="min_price">От</label>
+            <input id="min_price"  class="price" type="number" min="0" max="" value="">
+          </div>
+          <div>
+            <label for="max_price">До</label>
+            <input id="max_price" class="price" type="number" min="0" max="" value="">
+          </div>
+        </fieldset>
+        <div>
+          <button type="button" class="vertical_menu_button
+           apply">
+            <span>Применить</span>
+          </button>
+        </div>
+      </div>
     </div>
   `;
 };
@@ -45,7 +70,7 @@ const addInputGroup = () => {
     'afterbegin',
     `
       <div class="input_group">
-        <input type="text" name="search" placeholder="Поиск книги по названию">
+        <input type="text" name="search_by_name" placeholder="Поиск книги по названию">
         <button type="button" class="button_search">
           <i class="fas fa-search"></i>
         </button> 
@@ -65,7 +90,7 @@ const addButtonGoToCart = () => {
       <div class='go_to_cart'>
         <i class="fas fa-shopping-cart"></i>
         <span>Всего:</span>
-        <span>&#36 ${cartTotal}</span>
+        <span>&#36 ${cartTotal.toFixed(2)}</span>
       </div>
     `
   );
@@ -106,12 +131,14 @@ const addAllBooks = (arr) => {
 };
 addAllBooks(books);
 
+//Сортировка
+
 const addSelectedBlock = () => {
   const navBlock = document.querySelector('.nav_block');
   navBlock.insertAdjacentHTML(
     'afterend',
     `
-      <form>
+      <form class="sorting">
         <label for="sorting_books">Сортировать книги:</label>
         <select id="sorting_books">
           <option value="">---</option>
@@ -174,3 +201,117 @@ const sortsByPriceReverse = (arr) => {
   document.querySelector('.all_books').innerHTML = '';
   addAllBooks(sortPriceReverse);
 };
+
+//ФИЛЬТРЫ
+
+//поиск по названию книги
+const searchByName = (arr) => {
+  const inputSearch = document.querySelector('[name="search_by_name"]');
+
+  const buttonSearsh = document.querySelector('.button_search');
+  buttonSearsh.addEventListener('click', (event) => {
+    const filterByName = arr.filter((item) =>
+      item.title.includes(inputSearch.value.toLowerCase())
+    );
+    document.querySelector('.all_books').innerHTML = '';
+    addAllBooks(filterByName);
+  });
+};
+searchByName(books);
+
+//по жанру
+
+const filterBooksByGenre = (arr) => {
+  let allCheckboxes = document.querySelectorAll('[type="checkbox"]');
+  console.log(allCheckboxes);
+  Array.from(allCheckboxes).map((input) => {
+    input.addEventListener('change', (event) => {
+      console.log(event.target.checked);
+      console.log(event.target.name);
+
+      if (event.target.checked) {
+        if (event.target.name == 'novels') {
+          let novels = arr.filter((item) => item.genre === 'novels');
+          document.querySelector('.all_books').innerHTML = '';
+          addAllBooks(novels);
+        }
+
+        if (event.target.name == 'fiction') {
+          let fiction = arr.filter((item) => item.genre === 'fiction');
+          // document.querySelector('.all_books').innerHTML = '';
+          addAllBooks(fiction);
+        }
+        if (event.target.name == 'fairy_tales') {
+          let fairyTales = arr.filter((item) => item.genre === 'fairy_tales');
+          // document.querySelector('.all_books').innerHTML = '';
+          addAllBooks(fairyTales);
+        }
+        console.log(222222222222);
+      } else {
+        console.log(33333333333333);
+        document.querySelector('.all_books').innerHTML = '';
+        addAllBooks(arr);
+      }
+    });
+  });
+};
+
+filterBooksByGenre(books);
+
+//по цене
+
+const priceInputs = document.getElementsByClassName('price');
+const validateNumberInputValue = () => {
+  console.log(priceInputs);
+  Array.from(priceInputs).forEach((input) => {
+    input.addEventListener('blur', (event) => {
+      const min = +input.min;
+      const value = +event.target.value;
+      let minValue = parseFloat(priceInputs[0].value);
+      let maxValue = parseFloat(priceInputs[1].value);
+      if (value < min) {
+        input.value = min;
+      }
+      if (value > min) {
+        input.value = value.toFixed(2);
+      }
+      if (maxValue < minValue) {
+        input.value = minValue.toFixed(2);
+      }
+    });
+  });
+};
+validateNumberInputValue();
+
+const getBooksByPrice = (arr) => {
+  const applyButton = document.querySelector('.apply');
+  console.log(applyButton);
+  applyButton.addEventListener('click', (event) => {
+    const minValue = parseFloat(priceInputs[0].value);
+    const maxValue = parseFloat(priceInputs[1].value);
+    const booksByPrice = arr.filter(
+      (item) => item.price >= minValue && item.price <= maxValue
+    );
+    if (booksByPrice.length > 0) {
+      document.querySelector('.all_books').innerHTML = '';
+      addAllBooks(booksByPrice);
+    } else {
+      document.querySelector('.all_books').innerHTML = '';
+      addAllBooks(books);
+    }
+  });
+};
+getBooksByPrice(books);
+
+/*фильтры:
+1 По жанрам чекбокс 
+- изначально не выбран не один(все книги)
+- реализовать возможность выбора нескольких кнопок, с отрисовкой соответствующего контента;
+
+2 Цена 
+два маленьких намберовых импута от-до включительно
+значение инпутов  - мин 0 мах не ограничена
+валидация вводить только цифры округлить до 2 знаков
+мин не может быть больше макс, но могут быть равны
+
+3 поиск : при вводе произвольных символов в любом кол-ва,  после нажатия на кнопку показывать книги в названии которых  содержаться набранная строка.*/

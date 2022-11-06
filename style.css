@@ -14,35 +14,51 @@ body {
   margin: 20px;
   display: flex;
 }
-/* МЕНЮ */
+/* ВЕРТИКАЛЬНОЕ МЕНЮ */
 .vertical_menu {
   width: 250px;
 }
-.menu_button {
+.vertical_menu_button {
   width: 100%;
   height: 40px;
-  background-color: #b2e3b3;
+  background-color: #ba8f78;
   border: 2px solid #2c0936;
-  color: #14552e;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #2c0936;
   font-size: 1.5em;
   font-weight: 700;
 }
-.menu_list {
-  border: 2px solid #2c0936;
-  background-color: #c9b294;
-  list-style-type: none;
-  padding: 0;
-}
-.menu_link {
-  text-decoration: none;
-  padding: 10px;
+
+.filters {
+  width: 100%;
+  background-color: #b2e3b3;
+  padding: 20px;
   color: #2c0936;
-  display: inline-block;
   font-weight: 700;
+  border: 2px solid #2c0936;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-.menu_link:hover {
-  color: #14552e;
-  padding-left: 30px;
+fieldset {
+  border: 2px solid #2c0936;
+  background-color: #b2e3b3;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+fieldset label {
+  font-size: 0.75em;
+}
+
+button.vertical_menu_button.apply {
+  /* width: 50%; */
+  height: 30px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  font-size: 0.75rem;
+  margin: auto;
 }
 
 .main_block {
@@ -85,6 +101,10 @@ body {
   color: #2c0936;
 }
 
+.sorting {
+  margin: auto;
+}
+
 /* БЛОК С КНИГАМИ */
 .all_books {
   display: flex;
@@ -102,6 +122,7 @@ body {
 }
 
 /* КНОПКА ПЕРЕХОДА В КОРЗИНУ */
+
 .go_to_cart {
   width: 240px;
   height: 40px;
@@ -114,6 +135,7 @@ body {
 }
 
 /* КОРЗИНА */
+
 .cart_wrapper {
   width: 80%;
   background-color: #b2e3b3;
