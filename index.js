@@ -15,15 +15,15 @@ const addVerticalManu = () => {
         <fieldset>
           <legend>Жанр</legend>
           <div>
-            <input type="checkbox" id="novels" name="novels">
+            <input type="checkbox" id="novels" name="genre" value="novels">
             <label for="novels">Романы</label>
           </div>
           <div>
-            <input type="checkbox" id="fiction" name="fiction">
+            <input type="checkbox" id="fiction" name="genre" value="fiction">
             <label for="fiction">Фантастика</label>
           </div>
           <div>
-            <input type="checkbox" id="fairy_tales" name="fairy_tales">
+            <input type="checkbox" id="fairy_tales" name="genre" value="fairy_tales">
             <label for="fairy_tales">Сказки</label>
           </div>
         </fieldset>
@@ -98,8 +98,9 @@ const addButtonGoToCart = () => {
 addButtonGoToCart();
 
 const addAllBooks = (arr) => {
+  const allBooks = document.querySelector('.all_books');
+  allBooks.innerHTML = '';
   for (let i = 0; i < arr.length; i++) {
-    const allBooks = document.querySelector('.all_books');
     allBooks.insertAdjacentHTML(
       'afterbegin',
       `
@@ -211,52 +212,57 @@ const searchByName = (arr) => {
   const buttonSearsh = document.querySelector('.button_search');
   buttonSearsh.addEventListener('click', (event) => {
     const filterByName = arr.filter((item) =>
-      item.title.includes(inputSearch.value.toLowerCase())
+      item.title.toUpperCase().includes(inputSearch.value.toUpperCase())
     );
-    document.querySelector('.all_books').innerHTML = '';
+    // document.querySelector('.all_books').innerHTML = '';
     addAllBooks(filterByName);
   });
 };
 searchByName(books);
 
 //по жанру
-
-const filterBooksByGenre = (arr) => {
-  let allCheckboxes = document.querySelectorAll('[type="checkbox"]');
-  console.log(allCheckboxes);
-  Array.from(allCheckboxes).map((input) => {
-    input.addEventListener('change', (event) => {
-      console.log(event.target.checked);
-      console.log(event.target.name);
-
-      if (event.target.checked) {
-        if (event.target.name == 'novels') {
-          let novels = arr.filter((item) => item.genre === 'novels');
-          document.querySelector('.all_books').innerHTML = '';
-          addAllBooks(novels);
-        }
-
-        if (event.target.name == 'fiction') {
-          let fiction = arr.filter((item) => item.genre === 'fiction');
-          // document.querySelector('.all_books').innerHTML = '';
-          addAllBooks(fiction);
-        }
-        if (event.target.name == 'fairy_tales') {
-          let fairyTales = arr.filter((item) => item.genre === 'fairy_tales');
-          // document.querySelector('.all_books').innerHTML = '';
-          addAllBooks(fairyTales);
-        }
-        console.log(222222222222);
-      } else {
-        console.log(33333333333333);
-        document.querySelector('.all_books').innerHTML = '';
-        addAllBooks(arr);
+/*
+const filtersBooksByGenre = (books) => {
+  const checkboxes = Array.from(document.querySelectorAll('[name="genre"]'));
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', (event) => {
+      const checkedCheckboxes = checkboxes.filter((item) => item.checked);
+      if (checkedCheckboxes.length === 0) {
+        addAllBooks(books);
+        return;
       }
+      let filteredBooks = [];
+      for (let checkbox of checkedCheckboxes) {
+        // filteredBooks = filteredBooks.concat(
+        //   books.filter((book) => book.genre === checkbox.value)
+        // );
+        const newBooks = books.filter((book) => book.genre === checkbox.value);
+        filteredBooks = [...filteredBooks, ...newBooks];
+      }
+      addAllBooks(filteredBooks);
     });
   });
 };
+filtersBooksByGenre(books);
+*/
+const filtersBooksByGenre1 = (books) => {
+  const checkboxes = Array.from(document.querySelectorAll('[name="genre"]'));
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', (event) => {
+      const genres = checkboxes
+        .filter((item) => item.checked)
+        .map((item) => item.value);
 
-filterBooksByGenre(books);
+      if (genres.length === 0) {
+        addAllBooks(books);
+        return;
+      }
+      const filteredBooks = books.filter((book) => genres.includes(book.genre));
+      addAllBooks(filteredBooks);
+    });
+  });
+};
+filtersBooksByGenre1(books);
 
 //по цене
 
@@ -267,17 +273,17 @@ const validateNumberInputValue = () => {
     input.addEventListener('blur', (event) => {
       const min = +input.min;
       const value = +event.target.value;
-      let minValue = parseFloat(priceInputs[0].value);
-      let maxValue = parseFloat(priceInputs[1].value);
+      // let minValue = parseFloat(priceInputs[0].value);
+      // let maxValue = parseFloat(priceInputs[1].value);
       if (value < min) {
         input.value = min;
       }
       if (value > min) {
         input.value = value.toFixed(2);
       }
-      if (maxValue < minValue) {
-        input.value = minValue.toFixed(2);
-      }
+      // if (maxValue < minValue) {
+      //   input.value = minValue.toFixed(2);добавить span cо свойством hidden (или display-block или display-none)
+      // }
     });
   });
 };
@@ -293,10 +299,10 @@ const getBooksByPrice = (arr) => {
       (item) => item.price >= minValue && item.price <= maxValue
     );
     if (booksByPrice.length > 0) {
-      document.querySelector('.all_books').innerHTML = '';
+      // document.querySelector('.all_books').innerHTML = '';
       addAllBooks(booksByPrice);
     } else {
-      document.querySelector('.all_books').innerHTML = '';
+      // document.querySelector('.all_books').innerHTML = '';
       addAllBooks(books);
     }
   });
