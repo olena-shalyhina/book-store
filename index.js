@@ -2,8 +2,20 @@ import { books } from './books.js';
 import { allBooksInTheCart, getCartBookTotal } from './cart.js';
 
 const containerElement = document.querySelector('.container');
-
-const cartTotal = getCartBookTotal(allBooksInTheCart);
+const booksPrice = books.map((book) => book.price);
+// const cartTotal = getCartBookTotal(allBooksInTheCart);
+const cartTotal = localStorage.cartTotal;
+console.log(localStorage.cartTotal);
+const getMaxPrice = (books) => {
+  const maxPrice = Math.max(...booksPrice).toFixed(2);
+  return maxPrice;
+};
+const maxPrice = getMaxPrice(books);
+const getMinPrice = (books) => {
+  const minPrice = Math.min(...booksPrice).toFixed(2);
+  return minPrice;
+};
+const minPrice = getMinPrice(books);
 
 const addVerticalManu = () => {
   containerElement.innerHTML = `
@@ -31,11 +43,12 @@ const addVerticalManu = () => {
           <legend>Цена</legend>
           <div>
             <label for="min_price">От</label>
-            <input id="min_price"  class="price" type="number" min="0" max="" value="">
+            <input id="min_price"  class="price" type="number" min="${minPrice}" max="${maxPrice}" step="0.01" value="" placeholder="${minPrice}">
           </div>
           <div>
             <label for="max_price">До</label>
-            <input id="max_price" class="price" type="number" min="0" max="" value="">
+            <input id="max_price" class="price" type="number" min="${minPrice}" max="${maxPrice}" step="0.01" value="" placeholder="${maxPrice}">
+            <p class="warning">Некорректный диапазон поиска</p>
           </div>
         </fieldset>
         <div>
@@ -88,51 +101,70 @@ const addButtonGoToCart = () => {
     'afterend',
     `
       <div class='go_to_cart'>
+      <a href="/cart.html" target="_blank">
         <i class="fas fa-shopping-cart"></i>
         <span>Всего:</span>
-        <span>&#36 ${cartTotal.toFixed(2)}</span>
+        <span>&#36 ${cartTotal}</span>
+      </a>
       </div>
     `
   );
 };
 addButtonGoToCart();
 
+const addBook = (book, bookContainer) => {
+  const bookElement = document.createElement('div');
+  bookElement.className = 'book';
+  bookElement.innerHTML = `
+    <img src="${book.imageUrl}" alt="Книга">
+    <div class="book_information">
+      <h3 class="book_name">${book.title}<br> 
+        <span class="book_year">(${book.year})</span> 
+      </h3>
+      <p class="book_author">${book.author}</p>
+      <p class="book_price">&#36;<span>${book.price.toFixed(2)}</span></p> 
+    </div>
+    <div class="book_quantity">
+      <div class="book_counter">
+        <input type="number" min="0" max="${book.quantity}" value="${
+    book.quantity
+  }">
+      </div>
+      <button class="add_cart book_deleting">
+        <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+      </button>
+    </div>`;
+
+  buyBook(book, bookElement);
+  bookContainer.append(bookElement);
+};
+
+const addedToCartBooks = [];
+
+const buyBook = (book, bookElement) => {
+  const bookCounter = bookElement.querySelector('.book_counter input');
+  const bookButton = bookElement.querySelector('.add_cart');
+  bookButton.addEventListener('click', () => {
+    console.log(book);
+    console.log(bookCounter.value);
+    book.quantity = bookCounter.value;
+    addedToCartBooks.push(book);
+    localStorage.toCartBooks = JSON.stringify(addedToCartBooks);
+  });
+};
+
 const addAllBooks = (arr) => {
   const allBooks = document.querySelector('.all_books');
   allBooks.innerHTML = '';
   for (let i = 0; i < arr.length; i++) {
-    allBooks.insertAdjacentHTML(
-      'afterbegin',
-      `
-          <div class="book">
-            <img src="${arr[i].imageUrl}" alt="Книга">
-            <div class="book_information">
-              <h3 class="book_name">${arr[i].title} (
-                <span class="book_year">${arr[i].year}</span> )
-              </h3>
-              <p class="book_author">${arr[i].author}</p>
-              <p class="book_price">&#36;<span>${arr[i].price.toFixed(
-                2
-              )}</span></p> 
-            </div>
-            <div class="book_quantity">
-              <div class="book_counter">
-                <input type="number" min="0" max="${arr[i].quantity}" value="${
-        arr[i].quantity
-      }">
-              </div>
-              <button class="book_deleting">
-                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-              </button>
-            </div>
-          </div>
-        `
-    );
+    addBook(arr[i], allBooks);
   }
 };
 addAllBooks(books);
 
-//Сортировка
+//Добавление товаров в корзину
+
+//СОРТИРОВКА
 
 const addSelectedBlock = () => {
   const navBlock = document.querySelector('.nav_block');
@@ -158,69 +190,59 @@ const sortsBooks = (arr) => {
   let select = document.getElementById('sorting_books');
   console.log(select.value);
   select.addEventListener('change', (event) => {
-    if (event.target.value == 1) {
-      sortsByAlphabet(arr);
+    if (event.target.value === '1') {
+      sortByAlphabetAscending(arr);
     }
-    if (event.target.value == 2) {
-      sortsByAlphabetReverse(arr);
+    if (event.target.value === '2') {
+      sortByAlphabetDescending(arr);
     }
-    if (event.target.value == 3) {
-      sortsByPrice(arr);
+    if (event.target.value === '3') {
+      sortByPriceDescending(arr);
     }
-
-    if (event.target.value == 4) {
-      sortsByPriceReverse(arr);
+    if (event.target.value === '4') {
+      sortByPriceAscending(arr);
     }
   });
 };
 sortsBooks(books);
 
-const sortsByAlphabet = (arr) => {
-  let sortTitles = arr.sort((a, b) => (a.title < b.title ? 1 : -1));
-  document.querySelector('.all_books').innerHTML = '';
+const sortByAlphabetAscending = (arr) => {
+  let sortTitles = arr.sort((a, b) => (a.title > b.title ? 1 : -1));
   addAllBooks(sortTitles);
 };
 
-const sortsByAlphabetReverse = (arr) => {
-  let sortTitlesReverse = arr
-    .sort((a, b) => (a.title < b.title ? 1 : -1))
-    .reverse();
-  document.querySelector('.all_books').innerHTML = '';
+const sortByAlphabetDescending = (arr) => {
+  let sortTitlesReverse = arr.sort((a, b) => (a.title < b.title ? 1 : -1));
   addAllBooks(sortTitlesReverse);
 };
 
-const sortsByPrice = (arr) => {
-  let sortPrice = arr.sort((a, b) => (a.price > b.price ? 1 : -1));
-  document.querySelector('.all_books').innerHTML = '';
+const sortByPriceDescending = (arr) => {
+  let sortPrice = arr.sort((a, b) => (a.price < b.price ? 1 : -1));
   addAllBooks(sortPrice);
 };
 
-const sortsByPriceReverse = (arr) => {
-  let sortPriceReverse = arr
-    .sort((a, b) => (a.price > b.price ? 1 : -1))
-    .reverse();
-  document.querySelector('.all_books').innerHTML = '';
+const sortByPriceAscending = (arr) => {
+  let sortPriceReverse = arr.sort((a, b) => (a.price > b.price ? 1 : -1));
   addAllBooks(sortPriceReverse);
 };
 
 //ФИЛЬТРЫ
 
-//поиск по названию книги
-const searchByName = (arr) => {
+//Фильтр по названию книги
+const searchByName = (books) => {
   const inputSearch = document.querySelector('[name="search_by_name"]');
 
   const buttonSearsh = document.querySelector('.button_search');
   buttonSearsh.addEventListener('click', (event) => {
-    const filterByName = arr.filter((item) =>
-      item.title.toUpperCase().includes(inputSearch.value.toUpperCase())
+    const filterByName = books.filter((book) =>
+      book.title.toUpperCase().includes(inputSearch.value.toUpperCase())
     );
-    // document.querySelector('.all_books').innerHTML = '';
     addAllBooks(filterByName);
   });
 };
 searchByName(books);
 
-//по жанру
+//Фильтр по жанру
 /*
 const filtersBooksByGenre = (books) => {
   const checkboxes = Array.from(document.querySelectorAll('[name="genre"]'));
@@ -244,8 +266,10 @@ const filtersBooksByGenre = (books) => {
   });
 };
 filtersBooksByGenre(books);
+
 */
-const filtersBooksByGenre1 = (books) => {
+/*ОК КОД
+const filtersBooksByGenre = (books) => {
   const checkboxes = Array.from(document.querySelectorAll('[name="genre"]'));
   checkboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', (event) => {
@@ -262,52 +286,99 @@ const filtersBooksByGenre1 = (books) => {
     });
   });
 };
-filtersBooksByGenre1(books);
+filtersBooksByGenre(books);
+*/
 
-//по цене
+const filtersBooksByGenre = (books) => {
+  const checkboxes = Array.from(document.querySelectorAll('[name="genre"]'));
+  const genres = checkboxes
+    .filter((item) => item.checked)
+    .map((item) => item.value);
+  const filteredBooks = books.filter((book) => genres.includes(book.genre));
+  return filteredBooks;
+};
+
+//Фильтр по цене
 
 const priceInputs = document.getElementsByClassName('price');
 const validateNumberInputValue = () => {
-  console.log(priceInputs);
   Array.from(priceInputs).forEach((input) => {
     input.addEventListener('blur', (event) => {
-      const min = +input.min;
+      // const min = +input.min;
       const value = +event.target.value;
-      // let minValue = parseFloat(priceInputs[0].value);
-      // let maxValue = parseFloat(priceInputs[1].value);
-      if (value < min) {
-        input.value = min;
+      const minValue = parseFloat(priceInputs[0].value);
+      const maxValue = parseFloat(priceInputs[1].value);
+      const warning = document.querySelector('.warning');
+      if (value < minPrice) {
+        input.value = minPrice;
       }
-      if (value > min) {
+      if (value > minPrice) {
         input.value = value.toFixed(2);
       }
-      // if (maxValue < minValue) {
-      //   input.value = minValue.toFixed(2);добавить span cо свойством hidden (или display-block или display-none)
-      // }
+      if (maxValue < minValue || maxValue > maxPrice) {
+        warning.style.display = 'block';
+      } else {
+        warning.style.display = 'none';
+      }
     });
   });
 };
 validateNumberInputValue();
 
-const getBooksByPrice = (arr) => {
+/*
+const getBooksByPrice = (books) => {
   const applyButton = document.querySelector('.apply');
   console.log(applyButton);
   applyButton.addEventListener('click', (event) => {
     const minValue = parseFloat(priceInputs[0].value);
     const maxValue = parseFloat(priceInputs[1].value);
-    const booksByPrice = arr.filter(
+    const booksByPrice = books.filter(
       (item) => item.price >= minValue && item.price <= maxValue
     );
     if (booksByPrice.length > 0) {
-      // document.querySelector('.all_books').innerHTML = '';
       addAllBooks(booksByPrice);
     } else {
-      // document.querySelector('.all_books').innerHTML = '';
       addAllBooks(books);
     }
   });
 };
 getBooksByPrice(books);
+
+*/
+//Попытка объединить
+
+const filtersBooks = (books) => {
+  const applyButton = document.querySelector('.apply');
+  applyButton.addEventListener('click', function (event) {
+    const booksByGenre = filtersBooksByGenre(books);
+    console.log(booksByGenre);
+
+    const minValue = parseFloat(priceInputs[0].value);
+    const maxValue = parseFloat(priceInputs[1].value);
+    let booksByPrice = booksByGenre.filter(
+      (book) => book.price >= minValue && book.price <= maxValue
+    );
+    if (booksByGenre.length === 0) {
+      booksByPrice = books.filter(
+        (book) => book.price >= minValue && book.price <= maxValue
+      );
+      console.log(booksByPrice);
+      addAllBooks(booksByPrice);
+    }
+    if (booksByGenre.length > 0 && booksByPrice.length === 0) {
+      addAllBooks(booksByGenre);
+    }
+
+    if (booksByPrice.length > 0) {
+      addAllBooks(booksByPrice);
+      console.log(booksByPrice);
+    }
+    if (booksByGenre.length === 0 && booksByPrice.length === 0) {
+      addAllBooks(books);
+    }
+  });
+};
+filtersBooks(books);
 
 /*фильтры:
 1 По жанрам чекбокс 

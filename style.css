@@ -52,8 +52,25 @@ fieldset label {
   font-size: 0.75em;
 }
 
+.warning {
+  display: none;
+  background-color: #f4ecec;
+  color: #a00909;
+  font-size: 8px;
+  text-align: center;
+  width: 150px;
+  margin: auto;
+  padding: 3px 0;
+  font-weight: 300;
+  border: 1px solid #a00909;
+}
+.price {
+  width: 140px;
+  height: 24px;
+  margin: 5px;
+}
+
 button.vertical_menu_button.apply {
-  /* width: 50%; */
   height: 30px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -66,7 +83,7 @@ button.vertical_menu_button.apply {
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
 /* НАВИГАЦИОННЫЙ БЛОК */
@@ -110,28 +127,55 @@ button.vertical_menu_button.apply {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  gap: 20px;
 }
 
 .all_books .book {
-  width: 350px;
-  height: 170px;
+  max-width: 150px;
+  height: 360px;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.7em;
 }
 
 .all_books .book img {
-  width: 20%;
+  width: 100%;
+  height: 200px;
+}
+.book_author {
+  font-size: 0.85em;
+  font-weight: 700;
+  height: 20px;
+  margin: 10px;
+  color: #561308;
 }
 
 /* КНОПКА ПЕРЕХОДА В КОРЗИНУ */
 
-.go_to_cart {
+.go_to_cart a {
+  display: block;
   width: 240px;
   height: 40px;
+  color: #2c0936;
+  font-weight: 700;
   background-color: #ba8f78;
   border: 2px solid #2c0936;
+  text-decoration: none;
   border-radius: 5px;
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+
+a.back_to_catalog {
+  padding: 3px;
+  color: #2c0936;
+  font-size: 0.8em;
+  font-weight: 700;
+  background-color: #ba8f78;
+  border: 2px solid #2c0936;
+  text-decoration: none;
+  border-radius: 10px;
 }
 
 /* КОРЗИНА */
@@ -154,7 +198,7 @@ h1 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 94%;
+  width: 90%;
   margin: auto;
   text-align: center;
   border: 1px solid #130417;
@@ -176,6 +220,7 @@ img {
 .book_quantity {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   align-items: center;
   column-gap: 20px;
 }
@@ -186,13 +231,13 @@ img {
 }
 
 .book_deleting {
-  background-color: #dea67e;
+  background-color: #bc8b71;
   padding: 10px;
   border-radius: 50%;
 }
 
 .book_deleting:hover {
-  background-color: #3da073;
+  background-color: #b2e3b3;
 }
 
 .book_deleting i {
@@ -216,17 +261,18 @@ img {
   font-size: 20px;
 }
 
-.buy_button {
+.buy_button,
+.clear {
   width: 100px;
   height: 30px;
-  background-color: #3da073;
-  border: 2px solid #130417;
+  background-color: #89d890;
+  border: 2px solid #2d6e51;
   border-radius: 10px;
   font-weight: 700;
 }
 
-.buy_button:hover {
-  background-color: #3da073;
+.buy_button:hover,
+.clear:hover {
   background-color: #dea67e;
 }
 
@@ -240,4 +286,5 @@ img {
   border-radius: 10px;
   text-align: center;
   margin: auto;
+  margin-bottom: 20px;
 }

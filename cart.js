@@ -1,15 +1,16 @@
 'use strict';
 
-import { books } from './books.js';
+import { books as arr } from './books.js';
 
-//заменить на div body
 const containerElement = document.querySelector('.container');
 const allBooksInTheCart = document.getElementsByClassName('book');
+const toCartBooks = JSON.parse(localStorage.toCartBooks);
+console.log(toCartBooks);
 
 const addCartWrapper = () => {
   containerElement.innerHTML = `
     <div class="cart_wrapper">
-      <h1 class="cart_name">Корзина</h1>
+      <h1  id="cart_name" class="cart_name">Корзина</h1>
     </div>
   `;
 };
@@ -17,27 +18,27 @@ addCartWrapper();
 
 const addBook = (arr) => {
   for (let i = 0; i < arr.length; i++) {
-    if (books[i].quantity) {
+    if (arr[i].quantity) {
       const heading = document.querySelector('h1');
       heading.insertAdjacentHTML(
         'afterend',
         `
           <div class="book">
-            <img src="${books[i].imageUrl}" alt="Книга">
+            <img src="${arr[i].imageUrl}" alt="Книга">
             <div class="book_information">
-              <h3 class="book_name">${books[i].title} (
-                <span class="book_year">${books[i].year}</span> )
+              <h3 class="book_name">${arr[i].title} (
+                <span class="book_year">${arr[i].year}</span> )
               </h3>
-              <p class="book_author">${books[i].author}</p>
-              <p class="book_price">&#36;<span>${books[i].price.toFixed(
+              <p class="book_author">${arr[i].author}</p>
+              <p class="book_price">&#36;<span>${arr[i].price.toFixed(
                 2
               )}</span></p> 
             </div>
             <div class="book_quantity">
               <div class="book_counter">
-                <input type="number" min="0" max="${
-                  books[i].quantity
-                }" value="${books[i].quantity}">
+                <input type="number" min="0" max="${arr[i].quantity}" value="${
+          arr[i].quantity
+        }">
               </div>
               <button class="book_deleting">
                 <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -49,7 +50,7 @@ const addBook = (arr) => {
     }
   }
 };
-addBook(books);
+addBook(toCartBooks);
 
 const getCartBookTotal = (collection) => {
   let result = 0;
@@ -71,7 +72,10 @@ const addCartTotal = () => {
         <p class="book_price">Всего: &#36;
           <span class="total_price">${cartTotal}</span>
         </p>
-        <button class="buy_button">Купить</button> 
+        <button class="buy_button" >Купить</button> 
+        <button class="clear" >Очистить
+        </button> 
+        <a href="/index.html" class="back_to_catalog">В каталог</a> 
       </div>
     `
   );
@@ -82,6 +86,8 @@ const renderCartTotal = () => {
   let cartTotal = getCartBookTotal(allBooksInTheCart);
   let totalPrice = document.querySelector('.total_price');
   totalPrice.innerHTML = `${cartTotal.toFixed(2)}`;
+  localStorage.cartTotal = cartTotal.toFixed(2);
+  console.log(cartTotal);
 };
 
 const deleteBook = () => {
@@ -135,11 +141,14 @@ const validateBookQuantity = () => {
 };
 validateBookQuantity();
 
+const clearButton = document.querySelector('.clear');
 const handlesEventsBuyButton = () => {
   const buyButton = document.querySelector('.buy_button');
-  buyButton.addEventListener('click', function (event) {
+  buyButton.addEventListener('click', (event) => {
     if (getCartBookTotal(allBooksInTheCart) == 0) {
       buyButton.setAttribute('hidden', 'true');
+      clearButton.setAttribute('hidden', 'true');
+      console.log(buyButton);
     } else {
       alert('Спасибо за покупку!');
     }
