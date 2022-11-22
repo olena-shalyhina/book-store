@@ -1,10 +1,9 @@
 'use strict';
 
-import { books as arr } from './books.js';
-
 const containerElement = document.querySelector('.container');
 const allBooksInTheCart = document.getElementsByClassName('book');
-const toCartBooks = JSON.parse(localStorage.toCartBooks);
+
+const toCartBooks = JSON.parse(localStorage.getItem('toCartBooks')) || [];
 console.log(toCartBooks);
 
 const addCartWrapper = () => {
@@ -73,7 +72,7 @@ const addCartTotal = () => {
           <span class="total_price">${cartTotal}</span>
         </p>
         <button class="buy_button" >Купить</button> 
-        <button class="clear" >Очистить
+        <button class="clear">Очистить
         </button> 
         <a href="/index.html" class="back_to_catalog">В каталог</a> 
       </div>
@@ -86,7 +85,7 @@ const renderCartTotal = () => {
   let cartTotal = getCartBookTotal(allBooksInTheCart);
   let totalPrice = document.querySelector('.total_price');
   totalPrice.innerHTML = `${cartTotal.toFixed(2)}`;
-  localStorage.cartTotal = cartTotal.toFixed(2);
+  localStorage.cartTotal = JSON.stringify(cartTotal.toFixed(2));
   console.log(cartTotal);
 };
 
@@ -156,4 +155,16 @@ const handlesEventsBuyButton = () => {
 };
 handlesEventsBuyButton();
 
+const clearCart = () => {
+  console.log(document.querySelector('.clear'));
+  clearButton.addEventListener('click', (e) => {
+    for (let book of allBooksInTheCart) {
+      book.remove();
+    }
+    console.log(allBooksInTheCart);
+
+    localStorage.clear();
+  });
+};
+clearCart();
 export { allBooksInTheCart, getCartBookTotal };

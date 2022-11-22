@@ -4,7 +4,7 @@ import { allBooksInTheCart, getCartBookTotal } from './cart.js';
 const containerElement = document.querySelector('.container');
 const booksPrice = books.map((book) => book.price);
 // const cartTotal = getCartBookTotal(allBooksInTheCart);
-const cartTotal = localStorage.cartTotal;
+const cartTotal = JSON.parse(localStorage.getItem('cartTotal')) || '0.00';
 console.log(localStorage.cartTotal);
 const getMaxPrice = (books) => {
   const maxPrice = Math.max(...booksPrice).toFixed(2);
