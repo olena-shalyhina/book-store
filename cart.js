@@ -9,7 +9,7 @@ console.log(toCartBooks);
 const addCartWrapper = () => {
   containerElement.innerHTML = `
     <div class="cart_wrapper">
-      <h1  id="cart_name" class="cart_name">Корзина</h1>
+      <h2  id="cart_name" class="cart_name">Отличный выбор!</h1>
     </div>
   `;
 };
@@ -18,16 +18,17 @@ addCartWrapper();
 const addBook = (arr) => {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].quantity) {
-      const heading = document.querySelector('h1');
+      const heading = document.querySelector('h2');
       heading.insertAdjacentHTML(
         'afterend',
         `
           <div class="book">
             <img src="${arr[i].imageUrl}" alt="Книга">
+            <div class="discription">
             <div class="book_information">
-              <h3 class="book_name">${arr[i].title} (
-                <span class="book_year">${arr[i].year}</span> )
-              </h3>
+              <h4 class="book_name">${arr[i].title}
+                <span class="book_year">(${arr[i].year})</span>
+              </h4>
               <p class="book_author">${arr[i].author}</p>
               <p class="book_price">&#36;<span>${arr[i].price.toFixed(
                 2
@@ -42,6 +43,7 @@ const addBook = (arr) => {
               <button class="book_deleting">
                 <i class="fa fa-trash-o" aria-hidden="true"></i>
               </button>
+            </div>
             </div>
           </div>
         `
@@ -71,10 +73,12 @@ const addCartTotal = () => {
         <p class="book_price">Всего: &#36;
           <span class="total_price">${cartTotal}</span>
         </p>
+        <div class="total_buttons">
         <button class="buy_button" >Купить</button> 
         <button class="clear">Очистить
         </button> 
-        <a href="/index.html" class="back_to_catalog">В каталог</a> 
+        <a href="/index.html" class="back_to_catalog">В каталог</a>
+        </div> 
       </div>
     `
   );
@@ -90,11 +94,12 @@ const renderCartTotal = () => {
 };
 
 const deleteBook = () => {
-  for (let elem of allBooksInTheCart) {
-    let deleteBookButton = elem.querySelector('.book_deleting');
+  for (let book of allBooksInTheCart) {
+    let deleteBookButton = book.querySelector('.book_deleting');
     deleteBookButton.addEventListener('click', function (event) {
-      elem.remove();
+      book.remove();
       renderCartTotal();
+
       if (allBooksInTheCart.length <= 0) {
         const heading = document.querySelector('h1');
         heading.insertAdjacentHTML(
@@ -141,13 +146,12 @@ const validateBookQuantity = () => {
 validateBookQuantity();
 
 const clearButton = document.querySelector('.clear');
+const buyButton = document.querySelector('.buy_button');
 const handlesEventsBuyButton = () => {
-  const buyButton = document.querySelector('.buy_button');
   buyButton.addEventListener('click', (event) => {
     if (getCartBookTotal(allBooksInTheCart) == 0) {
       buyButton.setAttribute('hidden', 'true');
       clearButton.setAttribute('hidden', 'true');
-      console.log(buyButton);
     } else {
       alert('Спасибо за покупку!');
     }
@@ -156,10 +160,11 @@ const handlesEventsBuyButton = () => {
 handlesEventsBuyButton();
 
 const clearCart = () => {
-  console.log(document.querySelector('.clear'));
-  clearButton.addEventListener('click', (e) => {
+  clearButton.addEventListener('click', () => {
     for (let book of allBooksInTheCart) {
       book.remove();
+      renderCartTotal();
+      buyButton.setAttribute('hidden', 'true');
     }
     console.log(allBooksInTheCart);
 
@@ -167,4 +172,3 @@ const clearCart = () => {
   });
 };
 clearCart();
-export { allBooksInTheCart, getCartBookTotal };

@@ -1,11 +1,11 @@
 import { books } from './books.js';
-import { allBooksInTheCart, getCartBookTotal } from './cart.js';
 
 const containerElement = document.querySelector('.container');
-const booksPrice = books.map((book) => book.price);
 // const cartTotal = getCartBookTotal(allBooksInTheCart);
-const cartTotal = JSON.parse(localStorage.getItem('cartTotal')) || '0.00';
+let cartTotal = JSON.parse(localStorage.getItem('cartTotal')) || '0.00';
 console.log(localStorage.cartTotal);
+
+const booksPrice = books.map((book) => book.price);
 const getMaxPrice = (books) => {
   const maxPrice = Math.max(...booksPrice).toFixed(2);
   return maxPrice;
@@ -83,7 +83,7 @@ const addInputGroup = () => {
     'afterbegin',
     `
       <div class="input_group">
-        <input type="text" name="search_by_name" placeholder="Поиск книги по названию">
+        <input type="text" name="search_by_name" placeholder="Поиск по названию">
         <button type="button" class="button_search">
           <i class="fas fa-search"></i>
         </button> 
@@ -104,7 +104,7 @@ const addButtonGoToCart = () => {
       <a href="/cart.html" target="_blank">
         <i class="fas fa-shopping-cart"></i>
         <span>Всего:</span>
-        <span>&#36 ${cartTotal}</span>
+        <span class="buy_total">&#36 ${cartTotal}</span>
       </a>
       </div>
     `
@@ -141,6 +141,15 @@ const addBook = (book, bookContainer) => {
 
 const addedToCartBooks = [];
 
+const booksTotal = (books) => {
+  cartTotal = books
+    .map((book) => book.price * book.quantity)
+    .reduce((accumulator, price) => accumulator + price, 0);
+  console.log(cartTotal);
+  const span = document.querySelector('.buy_total');
+  span.innerHTML = `&#36 ${cartTotal.toFixed(2)}`;
+};
+
 const buyBook = (book, bookElement) => {
   const bookCounter = bookElement.querySelector('.book_counter input');
   const bookButton = bookElement.querySelector('.add_cart');
@@ -149,6 +158,8 @@ const buyBook = (book, bookElement) => {
     console.log(bookCounter.value);
     book.quantity = bookCounter.value;
     addedToCartBooks.push(book);
+    cartTotal = booksTotal(addedToCartBooks);
+
     localStorage.toCartBooks = JSON.stringify(addedToCartBooks);
   });
 };
@@ -358,23 +369,76 @@ const filtersBooks = (books) => {
     let booksByPrice = booksByGenre.filter(
       (book) => book.price >= minValue && book.price <= maxValue
     );
+    // addAllBooks(booksByPrice);
+
+    // if (booksByGenre.length === 0) {
+    //   booksByPrice = books.filter(
+    //     (book) => book.price >= minValue && book.price <= maxValue
+    //   );
+    //   addAllBooks(booksByPrice);
+    // }
+    // if (booksByGenre.length > 0) {
+    //   addAllBooks(booksByGenre);
+    // }
+
+    // if (booksByGenre.length > 0) {
+    //   if (booksByPrice.length > 0) {
+    //     addAllBooks(booksByPrice);
+    //   }
+    //   if (booksByPrice.length === 0) {
+    //     addAllBooks(booksByGenre);
+    //   }
+    // }
+    // if (booksByPrice.length > 0) {
+    //   if (booksByGenre.length === 0) {
+    //     booksByPrice = books.filter(
+    //       (book) => book.price >= minValue && book.price <= maxValue
+    //     );
+    //     addAllBooks(booksByPrice);
+    //   }
+    //   if (booksByGenre.length > 0) {
+    //     booksByPrice = booksByGenre.filter(
+    //       (book) => book.price >= minValue && book.price <= maxValue
+    //     );
+    //     addAllBooks(booksByPrice);
+    //   }
+    // }
+    // if (booksByPrice.length === 0) {
+    //   if (booksByGenre.length > 0) {
+    //     addAllBooks(booksByGenre);
+    //   }
+    //   if (booksByGenre.length === 0) {
+    //     addAllBooks(books);
+    //   }
+    // }
+    console.log(booksByGenre);
+    console.log(booksByGenre.length);
+    console.log(booksByPrice);
+    console.log(booksByPrice.length);
+
+    if (booksByGenre.length > 0 && booksByPrice.length === 0) {
+      console.log(booksByPrice.length);
+      console.log(booksByGenre.length);
+      addAllBooks(booksByGenre);
+    }
     if (booksByGenre.length === 0) {
       booksByPrice = books.filter(
         (book) => book.price >= minValue && book.price <= maxValue
       );
-      console.log(booksByPrice);
+      console.log(booksByPrice.length);
+      console.log(booksByGenre.length);
       addAllBooks(booksByPrice);
-    }
-    if (booksByGenre.length > 0 && booksByPrice.length === 0) {
-      addAllBooks(booksByGenre);
     }
 
-    if (booksByPrice.length > 0) {
+    if (booksByPrice.length > 0 && booksByGenre.length > 0) {
+      console.log(booksByPrice.length);
+      console.log(booksByGenre.length);
       addAllBooks(booksByPrice);
-      console.log(booksByPrice);
     }
     if (booksByGenre.length === 0 && booksByPrice.length === 0) {
       addAllBooks(books);
+      console.log(booksByPrice.length);
+      console.log(booksByGenre.length);
     }
   });
 };
