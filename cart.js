@@ -8,21 +8,22 @@ console.log(toCartBooks);
 
 const addCartWrapper = () => {
   containerElement.innerHTML = `
-    <div class="cart_wrapper">
-      <h2  id="cart_name" class="cart_name">Отличный выбор!</h1>
-    </div>
+  <div class="cart_wrapper">
+  <h2  id="cart_name" class="cart_name">Отличный выбор!</h2>
+  <div class="books_container"></div>
+  </div>
   `;
 };
 addCartWrapper();
 
+const booksContainer = document.querySelector('.books_container');
 const addBook = (arr) => {
+  booksContainer.innerHTML = '';
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].quantity) {
-      const heading = document.querySelector('h2');
-      heading.insertAdjacentHTML(
-        'afterend',
-        `
-          <div class="book">
+      const bookElement = document.createElement('div');
+      bookElement.className = 'book';
+      bookElement.innerHTML = `
             <img src="${arr[i].imageUrl}" alt="Книга">
             <div class="discription">
             <div class="book_information">
@@ -32,13 +33,13 @@ const addBook = (arr) => {
               <p class="book_author">${arr[i].author}</p>
               <p class="book_price">&#36;<span>${arr[i].price.toFixed(
                 2
-              )}</span></p> 
+              )}</span></p>
             </div>
             <div class="book_quantity">
               <div class="book_counter">
-                <input type="number" min="0" max="${arr[i].quantity}" value="${
-          arr[i].quantity
-        }">
+                <input type="number" min="1" max="${arr[i].quantity}" value="${
+        arr[i].quantity
+      }">
               </div>
               <button class="book_deleting">
                 <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -46,8 +47,8 @@ const addBook = (arr) => {
             </div>
             </div>
           </div>
-        `
-      );
+        `;
+      booksContainer.append(bookElement);
     }
   }
 };
@@ -92,25 +93,33 @@ const renderCartTotal = () => {
   localStorage.cartTotal = JSON.stringify(cartTotal.toFixed(2));
   console.log(cartTotal);
 };
+const clearButton = document.querySelector('.clear');
+const buyButton = document.querySelector('.buy_button');
+
+const cartWarning = () => {
+  const heading = document.querySelector('h2');
+  heading.innerHTML = '';
+  booksContainer.innerHTML = `
+        <div class="empty_cart">
+        Ваша корзина пуста
+        </div>
+      `;
+  buyButton.setAttribute('hidden', 'true');
+  clearButton.setAttribute('hidden', 'true');
+  renderCartTotal();
+  localStorage.clear();
+};
 
 const deleteBook = () => {
   for (let book of allBooksInTheCart) {
-    let deleteBookButton = book.querySelector('.book_deleting');
+    const deleteBookButton = book.querySelector('.book_deleting');
     deleteBookButton.addEventListener('click', function (event) {
       book.remove();
-      renderCartTotal();
 
-      if (allBooksInTheCart.length <= 0) {
-        const heading = document.querySelector('h1');
-        heading.insertAdjacentHTML(
-          'afterend',
-          `
-            <div class="empty_cart">
-            Ваша корзина пуста
-            </div>
-          `
-        );
+      if (allBooksInTheCart.length === 0) {
+        cartWarning();
       }
+      renderCartTotal();
     });
   }
 };
@@ -145,30 +154,17 @@ const validateBookQuantity = () => {
 };
 validateBookQuantity();
 
-const clearButton = document.querySelector('.clear');
-const buyButton = document.querySelector('.buy_button');
-const handlesEventsBuyButton = () => {
+const handlesEventsTotalButtons = () => {
   buyButton.addEventListener('click', (event) => {
-    if (getCartBookTotal(allBooksInTheCart) == 0) {
-      buyButton.setAttribute('hidden', 'true');
-      clearButton.setAttribute('hidden', 'true');
-    } else {
-      alert('Спасибо за покупку!');
-    }
+    alert('Спасибо за покупку!');
   });
 };
-handlesEventsBuyButton();
+handlesEventsTotalButtons();
 
 const clearCart = () => {
   clearButton.addEventListener('click', () => {
-    for (let book of allBooksInTheCart) {
-      book.remove();
-      renderCartTotal();
-      buyButton.setAttribute('hidden', 'true');
-    }
-    console.log(allBooksInTheCart);
-
-    localStorage.clear();
+    cartWarning();
+    renderCartTotal();
   });
 };
 clearCart();

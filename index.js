@@ -1,7 +1,7 @@
 import { books } from './books.js';
 
 const containerElement = document.querySelector('.container');
-// const cartTotal = getCartBookTotal(allBooksInTheCart);
+
 let cartTotal = JSON.parse(localStorage.getItem('cartTotal')) || '0.00';
 console.log(localStorage.cartTotal);
 
@@ -101,7 +101,7 @@ const addButtonGoToCart = () => {
     'afterend',
     `
       <div class='go_to_cart'>
-      <a href="/cart.html" target="_blank">
+      <a href="/cart.html">
         <i class="fas fa-shopping-cart"></i>
         <span>Всего:</span>
         <span class="buy_total">&#36 ${cartTotal}</span>
@@ -254,32 +254,8 @@ const searchByName = (books) => {
 searchByName(books);
 
 //Фильтр по жанру
-/*
-const filtersBooksByGenre = (books) => {
-  const checkboxes = Array.from(document.querySelectorAll('[name="genre"]'));
-  checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener('change', (event) => {
-      const checkedCheckboxes = checkboxes.filter((item) => item.checked);
-      if (checkedCheckboxes.length === 0) {
-        addAllBooks(books);
-        return;
-      }
-      let filteredBooks = [];
-      for (let checkbox of checkedCheckboxes) {
-        // filteredBooks = filteredBooks.concat(
-        //   books.filter((book) => book.genre === checkbox.value)
-        // );
-        const newBooks = books.filter((book) => book.genre === checkbox.value);
-        filteredBooks = [...filteredBooks, ...newBooks];
-      }
-      addAllBooks(filteredBooks);
-    });
-  });
-};
-filtersBooksByGenre(books);
 
-*/
-/*ОК КОД
+/*
 const filtersBooksByGenre = (books) => {
   const checkboxes = Array.from(document.querySelectorAll('[name="genre"]'));
   checkboxes.forEach((checkbox) => {
@@ -315,7 +291,6 @@ const priceInputs = document.getElementsByClassName('price');
 const validateNumberInputValue = () => {
   Array.from(priceInputs).forEach((input) => {
     input.addEventListener('blur', (event) => {
-      // const min = +input.min;
       const value = +event.target.value;
       const minValue = parseFloat(priceInputs[0].value);
       const maxValue = parseFloat(priceInputs[1].value);
@@ -356,7 +331,6 @@ const getBooksByPrice = (books) => {
 getBooksByPrice(books);
 
 */
-//Попытка объединить
 
 const filtersBooks = (books) => {
   const applyButton = document.querySelector('.apply');
@@ -369,54 +343,12 @@ const filtersBooks = (books) => {
     let booksByPrice = booksByGenre.filter(
       (book) => book.price >= minValue && book.price <= maxValue
     );
-    // addAllBooks(booksByPrice);
-
-    // if (booksByGenre.length === 0) {
-    //   booksByPrice = books.filter(
-    //     (book) => book.price >= minValue && book.price <= maxValue
-    //   );
-    //   addAllBooks(booksByPrice);
-    // }
-    // if (booksByGenre.length > 0) {
-    //   addAllBooks(booksByGenre);
-    // }
-
-    // if (booksByGenre.length > 0) {
-    //   if (booksByPrice.length > 0) {
-    //     addAllBooks(booksByPrice);
-    //   }
-    //   if (booksByPrice.length === 0) {
-    //     addAllBooks(booksByGenre);
-    //   }
-    // }
-    // if (booksByPrice.length > 0) {
-    //   if (booksByGenre.length === 0) {
-    //     booksByPrice = books.filter(
-    //       (book) => book.price >= minValue && book.price <= maxValue
-    //     );
-    //     addAllBooks(booksByPrice);
-    //   }
-    //   if (booksByGenre.length > 0) {
-    //     booksByPrice = booksByGenre.filter(
-    //       (book) => book.price >= minValue && book.price <= maxValue
-    //     );
-    //     addAllBooks(booksByPrice);
-    //   }
-    // }
-    // if (booksByPrice.length === 0) {
-    //   if (booksByGenre.length > 0) {
-    //     addAllBooks(booksByGenre);
-    //   }
-    //   if (booksByGenre.length === 0) {
-    //     addAllBooks(books);
-    //   }
-    // }
     console.log(booksByGenre);
     console.log(booksByGenre.length);
     console.log(booksByPrice);
     console.log(booksByPrice.length);
 
-    if (booksByGenre.length > 0 && booksByPrice.length === 0) {
+    if (booksByGenre.length > 0 && booksByPrice.length == 0) {
       console.log(booksByPrice.length);
       console.log(booksByGenre.length);
       addAllBooks(booksByGenre);
@@ -443,16 +375,3 @@ const filtersBooks = (books) => {
   });
 };
 filtersBooks(books);
-
-/*фильтры:
-1 По жанрам чекбокс 
-- изначально не выбран не один(все книги)
-- реализовать возможность выбора нескольких кнопок, с отрисовкой соответствующего контента;
-
-2 Цена 
-два маленьких намберовых импута от-до включительно
-значение инпутов  - мин 0 мах не ограничена
-валидация вводить только цифры округлить до 2 знаков
-мин не может быть больше макс, но могут быть равны
-
-3 поиск : при вводе произвольных символов в любом кол-ва,  после нажатия на кнопку показывать книги в названии которых  содержаться набранная строка.*/
