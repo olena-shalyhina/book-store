@@ -2,8 +2,7 @@
 
 const containerElement = document.querySelector('.container');
 const allBooksInTheCart = document.getElementsByClassName('book');
-
-const toCartBooks = JSON.parse(localStorage.getItem('toCartBooks')) || [];
+let toCartBooks = JSON.parse(localStorage.getItem('toCartBooks')) || [];
 console.log(toCartBooks);
 
 const addCartWrapper = () => {
@@ -27,9 +26,8 @@ const addBook = (arr) => {
             <img src="${arr[i].imageUrl}" alt="Книга">
             <div class="discription">
             <div class="book_information">
-              <h4 class="book_name">${arr[i].title}
-                <span class="book_year">(${arr[i].year})</span>
-              </h4>
+              <h4 class="book_name">${arr[i].title}</h4>
+              <span class="book_year">(${arr[i].year})</span>
               <p class="book_author">${arr[i].author}</p>
               <p class="book_price">&#36;<span>${arr[i].price.toFixed(
                 2
@@ -110,20 +108,30 @@ const cartWarning = () => {
   localStorage.clear();
 };
 
-const deleteBook = () => {
-  for (let book of allBooksInTheCart) {
+const deleteBook = (books) => {
+  for (let book of books) {
     const deleteBookButton = book.querySelector('.book_deleting');
+
     deleteBookButton.addEventListener('click', function (event) {
       book.remove();
-
-      if (allBooksInTheCart.length === 0) {
+      updatetoCartBooks(book);
+      renderCartTotal();
+      if (books.length === 0) {
         cartWarning();
       }
-      renderCartTotal();
     });
   }
 };
-deleteBook();
+deleteBook(allBooksInTheCart);
+
+const updatetoCartBooks = (book) => {
+  const bookName = book.querySelector('.book_name');
+  toCartBooks = toCartBooks.filter(
+    (book) => !book.title.includes(bookName.innerText)
+  );
+
+  localStorage.setItem('toCartBooks', JSON.stringify(toCartBooks));
+};
 
 const validateBookQuantity = () => {
   const inputs = document.querySelectorAll('input');

@@ -3,7 +3,7 @@ import { books } from './books.js';
 const containerElement = document.querySelector('.container');
 
 let cartTotal = JSON.parse(localStorage.getItem('cartTotal')) || '0.00';
-console.log(localStorage.cartTotal);
+let addedToCartBooks = JSON.parse(localStorage.getItem('toCartBooks')) || [];
 
 const booksPrice = books.map((book) => book.price);
 const getMaxPrice = (books) => {
@@ -139,7 +139,7 @@ const addBook = (book, bookContainer) => {
   bookContainer.append(bookElement);
 };
 
-const addedToCartBooks = [];
+// const addedToCartBooks = [];
 
 const booksTotal = (books) => {
   cartTotal = books
