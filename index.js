@@ -154,12 +154,9 @@ const buyBook = (book, bookElement) => {
   const bookCounter = bookElement.querySelector('.book_counter input');
   const bookButton = bookElement.querySelector('.add_cart');
   bookButton.addEventListener('click', () => {
-    console.log(book);
-    console.log(bookCounter.value);
     book.quantity = bookCounter.value;
     addedToCartBooks.push(book);
     cartTotal = booksTotal(addedToCartBooks);
-
     localStorage.toCartBooks = JSON.stringify(addedToCartBooks);
   });
 };
@@ -199,7 +196,6 @@ addSelectedBlock();
 
 const sortsBooks = (arr) => {
   let select = document.getElementById('sorting_books');
-  console.log(select.value);
   select.addEventListener('change', (event) => {
     if (event.target.value === '1') {
       sortByAlphabetAscending(arr);
@@ -255,33 +251,15 @@ searchByName(books);
 
 //Фильтр по жанру
 
-/*
-const filtersBooksByGenre = (books) => {
-  const checkboxes = Array.from(document.querySelectorAll('[name="genre"]'));
-  checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener('change', (event) => {
-      const genres = checkboxes
-        .filter((item) => item.checked)
-        .map((item) => item.value);
-
-      if (genres.length === 0) {
-        addAllBooks(books);
-        return;
-      }
-      const filteredBooks = books.filter((book) => genres.includes(book.genre));
-      addAllBooks(filteredBooks);
-    });
-  });
-};
-filtersBooksByGenre(books);
-*/
-
 const filtersBooksByGenre = (books) => {
   const checkboxes = Array.from(document.querySelectorAll('[name="genre"]'));
   const genres = checkboxes
     .filter((item) => item.checked)
     .map((item) => item.value);
-  const filteredBooks = books.filter((book) => genres.includes(book.genre));
+  let filteredBooks = books.filter((book) => genres.includes(book.genre));
+  if (filteredBooks.length === 0) {
+    filteredBooks = books;
+  }
   return filteredBooks;
 };
 
@@ -311,67 +289,30 @@ const validateNumberInputValue = () => {
 };
 validateNumberInputValue();
 
-/*
 const getBooksByPrice = (books) => {
-  const applyButton = document.querySelector('.apply');
-  console.log(applyButton);
-  applyButton.addEventListener('click', (event) => {
-    const minValue = parseFloat(priceInputs[0].value);
-    const maxValue = parseFloat(priceInputs[1].value);
-    const booksByPrice = books.filter(
-      (item) => item.price >= minValue && item.price <= maxValue
-    );
-    if (booksByPrice.length > 0) {
-      addAllBooks(booksByPrice);
-    } else {
-      addAllBooks(books);
-    }
-  });
+  let minValue = parseFloat(priceInputs[0].value);
+  if (priceInputs[0].value === '') {
+    minValue = minPrice;
+  }
+  let maxValue = parseFloat(priceInputs[1].value);
+  if (priceInputs[1].value === '') {
+    maxValue = maxPrice;
+  }
+  const booksByPrice = books.filter(
+    (item) => item.price >= minValue && item.price <= maxValue
+  );
+  return booksByPrice;
 };
-getBooksByPrice(books);
-
-*/
 
 const filtersBooks = (books) => {
   const applyButton = document.querySelector('.apply');
   applyButton.addEventListener('click', function (event) {
     const booksByGenre = filtersBooksByGenre(books);
-    console.log(booksByGenre);
-
-    const minValue = parseFloat(priceInputs[0].value);
-    const maxValue = parseFloat(priceInputs[1].value);
-    let booksByPrice = booksByGenre.filter(
-      (book) => book.price >= minValue && book.price <= maxValue
-    );
-    console.log(booksByGenre);
-    console.log(booksByGenre.length);
-    console.log(booksByPrice);
-    console.log(booksByPrice.length);
-
-    if (booksByGenre.length > 0 && booksByPrice.length == 0) {
-      console.log(booksByPrice.length);
-      console.log(booksByGenre.length);
-      addAllBooks(booksByGenre);
+    if (booksByGenre.length === '') {
+      booksByGenre = books;
     }
-    if (booksByGenre.length === 0) {
-      booksByPrice = books.filter(
-        (book) => book.price >= minValue && book.price <= maxValue
-      );
-      console.log(booksByPrice.length);
-      console.log(booksByGenre.length);
-      addAllBooks(booksByPrice);
-    }
-
-    if (booksByPrice.length > 0 && booksByGenre.length > 0) {
-      console.log(booksByPrice.length);
-      console.log(booksByGenre.length);
-      addAllBooks(booksByPrice);
-    }
-    if (booksByGenre.length === 0 && booksByPrice.length === 0) {
-      addAllBooks(books);
-      console.log(booksByPrice.length);
-      console.log(booksByGenre.length);
-    }
+    const filterBooks = getBooksByPrice(booksByGenre);
+    addAllBooks(filterBooks);
   });
 };
 filtersBooks(books);

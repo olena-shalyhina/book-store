@@ -52,18 +52,18 @@ const addBook = (arr) => {
 };
 addBook(toCartBooks);
 
-const getCartBookTotal = (collection) => {
+const getCartBookTotal = (books) => {
   let result = 0;
-  for (let elem of collection) {
-    let bookPrice = elem.querySelector('.book_price span');
-    let input = elem.querySelector('input');
+  for (let book of books) {
+    let bookPrice = book.querySelector('.book_price span');
+    let input = book.querySelector('input');
     result = result + +bookPrice.innerHTML * +input.value;
   }
   return result;
 };
+const cartTotal = getCartBookTotal(allBooksInTheCart).toFixed(2);
 
 const addCartTotal = () => {
-  const cartTotal = getCartBookTotal(allBooksInTheCart).toFixed(2);
   const cartWrapper = document.querySelector('.cart_wrapper');
   cartWrapper.insertAdjacentHTML(
     'beforeend',
@@ -111,7 +111,6 @@ const cartWarning = () => {
 const deleteBook = (books) => {
   for (let book of books) {
     const deleteBookButton = book.querySelector('.book_deleting');
-
     deleteBookButton.addEventListener('click', function (event) {
       book.remove();
       updatetoCartBooks(book);
@@ -129,9 +128,13 @@ const updatetoCartBooks = (book) => {
   toCartBooks = toCartBooks.filter(
     (book) => !book.title.includes(bookName.innerText)
   );
-
   localStorage.setItem('toCartBooks', JSON.stringify(toCartBooks));
 };
+
+// const updateQuontity = (book) => {
+//   let input = book.querySelector('input');
+//   book.quantity = input.value;
+// };
 
 const validateBookQuantity = () => {
   const inputs = document.querySelectorAll('input');
