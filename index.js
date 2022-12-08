@@ -101,7 +101,7 @@ const addButtonGoToCart = () => {
     'afterend',
     `
       <div class='go_to_cart'>
-      <a href="/cart.html">
+      <a href="#" class="link">
         <i class="fas fa-shopping-cart"></i>
         <span>Всего:</span>
         <span class="buy_total">&#36 ${cartTotal}</span>
@@ -139,7 +139,7 @@ const addBook = (book, bookContainer) => {
   bookContainer.append(bookElement);
 };
 
-// const addedToCartBooks = [];
+//Добавление товаров в корзину
 
 const booksTotal = (books) => {
   cartTotal = books
@@ -158,6 +158,7 @@ const buyBook = (book, bookElement) => {
     addedToCartBooks.push(book);
     cartTotal = booksTotal(addedToCartBooks);
     localStorage.toCartBooks = JSON.stringify(addedToCartBooks);
+    goToCart();
   });
 };
 
@@ -170,8 +171,13 @@ const addAllBooks = (arr) => {
 };
 addAllBooks(books);
 
-//Добавление товаров в корзину
-
+const goToCart = () => {
+  if (addedToCartBooks.length > 0) {
+    let link = document.querySelector('.link');
+    link.setAttribute('href', '/cart.html');
+  }
+};
+goToCart();
 //СОРТИРОВКА
 
 const addSelectedBlock = () => {
@@ -274,12 +280,12 @@ const validateNumberInputValue = () => {
       const maxValue = parseFloat(priceInputs[1].value);
       const warning = document.querySelector('.warning');
       if (value < minPrice) {
-        input.value = minPrice;
+        input.value = 0;
       }
       if (value > minPrice) {
         input.value = value.toFixed(2);
       }
-      if (maxValue < minValue || maxValue > maxPrice) {
+      if (maxValue < minValue) {
         warning.style.display = 'block';
       } else {
         warning.style.display = 'none';
@@ -312,7 +318,15 @@ const filtersBooks = (books) => {
       booksByGenre = books;
     }
     const filterBooks = getBooksByPrice(booksByGenre);
-    addAllBooks(filterBooks);
+    if (filterBooks.length > 0) {
+      addAllBooks(filterBooks);
+    }
+    if (filterBooks.length === 0) {
+      addAllBooks(books);
+      setTimeout(() => {
+        alert('Нет книг, удовлетворяющих условию поиска');
+      }, 1000);
+    }
   });
 };
 filtersBooks(books);

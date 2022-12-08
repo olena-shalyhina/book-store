@@ -61,9 +61,9 @@ const getCartBookTotal = (books) => {
   }
   return result;
 };
-const cartTotal = getCartBookTotal(allBooksInTheCart).toFixed(2);
 
 const addCartTotal = () => {
+  const cartTotal = getCartBookTotal(allBooksInTheCart).toFixed(2);
   const cartWrapper = document.querySelector('.cart_wrapper');
   cartWrapper.insertAdjacentHTML(
     'beforeend',
@@ -91,6 +91,7 @@ const renderCartTotal = () => {
   localStorage.cartTotal = JSON.stringify(cartTotal.toFixed(2));
   console.log(cartTotal);
 };
+renderCartTotal();
 const clearButton = document.querySelector('.clear');
 const buyButton = document.querySelector('.buy_button');
 
