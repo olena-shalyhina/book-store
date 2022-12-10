@@ -140,6 +140,13 @@ const addBook = (book, bookContainer) => {
 };
 
 //Добавление товаров в корзину
+const goToCart = () => {
+  if (addedToCartBooks.length > 0) {
+    let link = document.querySelector('.link');
+    link.setAttribute('href', '/cart.html');
+  }
+};
+goToCart();
 
 const booksTotal = (books) => {
   cartTotal = books
@@ -171,13 +178,6 @@ const addAllBooks = (arr) => {
 };
 addAllBooks(books);
 
-const goToCart = () => {
-  if (addedToCartBooks.length > 0) {
-    let link = document.querySelector('.link');
-    link.setAttribute('href', '/cart.html');
-  }
-};
-goToCart();
 //СОРТИРОВКА
 
 const addSelectedBlock = () => {

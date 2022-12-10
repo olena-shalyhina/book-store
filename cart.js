@@ -95,6 +95,14 @@ renderCartTotal();
 const clearButton = document.querySelector('.clear');
 const buyButton = document.querySelector('.buy_button');
 
+const updatetoCartBooks = (book) => {
+  const bookName = book.querySelector('.book_name');
+  toCartBooks = toCartBooks.filter(
+    (book) => !book.title.includes(bookName.innerText)
+  );
+  localStorage.setItem('toCartBooks', JSON.stringify(toCartBooks));
+};
+
 const cartWarning = () => {
   const heading = document.querySelector('h2');
   heading.innerHTML = '';
@@ -123,14 +131,6 @@ const deleteBook = (books) => {
   }
 };
 deleteBook(allBooksInTheCart);
-
-const updatetoCartBooks = (book) => {
-  const bookName = book.querySelector('.book_name');
-  toCartBooks = toCartBooks.filter(
-    (book) => !book.title.includes(bookName.innerText)
-  );
-  localStorage.setItem('toCartBooks', JSON.stringify(toCartBooks));
-};
 
 // const updateQuontity = (book) => {
 //   let input = book.querySelector('input');
