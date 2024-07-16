@@ -143,7 +143,7 @@ const addBook = (book, bookContainer) => {
 const goToCart = () => {
   if (addedToCartBooks.length > 0) {
     let link = document.querySelector('.link');
-    link.setAttribute('href', '/cart.html');
+    link.setAttribute('href', 'cart.html');
   }
 };
 goToCart();

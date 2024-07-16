@@ -76,7 +76,7 @@ const addCartTotal = () => {
         <button class="buy_button" >Купить</button> 
         <button class="clear">Очистить
         </button> 
-        <a href="/index.html" class="back_to_catalog">В каталог</a>
+        <a href="index.html" class="back_to_catalog">В каталог</a>
         </div> 
       </div>
     `,
