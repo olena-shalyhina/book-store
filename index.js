@@ -72,7 +72,7 @@ const addMainBlock = () => {
         <div class="nav_block"></div>
         <div class="all_books"></div>
       </div>
-    `
+    `,
   );
 };
 addMainBlock();
@@ -89,7 +89,7 @@ const addInputGroup = () => {
         </button> 
       </div>
        
-    `
+    `,
   );
 };
 addInputGroup();
@@ -107,7 +107,7 @@ const addButtonGoToCart = () => {
         <span class="buy_total">&#36 ${cartTotal}</span>
       </a>
       </div>
-    `
+    `,
   );
 };
 addButtonGoToCart();
@@ -143,7 +143,7 @@ const addBook = (book, bookContainer) => {
 const goToCart = () => {
   if (addedToCartBooks.length > 0) {
     let link = document.querySelector('.link');
-    link.setAttribute('href', '/cart.html');
+    link.setAttribute('href', 'book-store/cart.html');
   }
 };
 goToCart();
@@ -195,7 +195,7 @@ const addSelectedBlock = () => {
           <option value="4">от дешевых к дорогим</option>
         </select>
       </form>
-    `
+    `,
   );
 };
 addSelectedBlock();
@@ -248,7 +248,7 @@ const searchByName = (books) => {
   const buttonSearsh = document.querySelector('.button_search');
   buttonSearsh.addEventListener('click', (event) => {
     const filterByName = books.filter((book) =>
-      book.title.toUpperCase().includes(inputSearch.value.toUpperCase())
+      book.title.toUpperCase().includes(inputSearch.value.toUpperCase()),
     );
     addAllBooks(filterByName);
   });
@@ -305,7 +305,7 @@ const getBooksByPrice = (books) => {
     maxValue = maxPrice;
   }
   const booksByPrice = books.filter(
-    (item) => item.price >= minValue && item.price <= maxValue
+    (item) => item.price >= minValue && item.price <= maxValue,
   );
   return booksByPrice;
 };
