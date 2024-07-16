@@ -30,7 +30,7 @@ const addBook = (arr) => {
               <span class="book_year">(${arr[i].year})</span>
               <p class="book_author">${arr[i].author}</p>
               <p class="book_price">&#36;<span>${arr[i].price.toFixed(
-                2
+                2,
               )}</span></p>
             </div>
             <div class="book_quantity">
@@ -76,10 +76,10 @@ const addCartTotal = () => {
         <button class="buy_button" >Купить</button> 
         <button class="clear">Очистить
         </button> 
-        <a href="/index.html" class="back_to_catalog">В каталог</a>
+        <a href="/book-store/index.html" class="back_to_catalog">В каталог</a>
         </div> 
       </div>
-    `
+    `,
   );
 };
 addCartTotal();
@@ -98,7 +98,7 @@ const buyButton = document.querySelector('.buy_button');
 const updatetoCartBooks = (book) => {
   const bookName = book.querySelector('.book_name');
   toCartBooks = toCartBooks.filter(
-    (book) => !book.title.includes(bookName.innerText)
+    (book) => !book.title.includes(bookName.innerText),
   );
   localStorage.setItem('toCartBooks', JSON.stringify(toCartBooks));
 };
