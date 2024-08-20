@@ -33,6 +33,7 @@ const addBook = (arr) => {
                 2,
               )}</span></p>
             </div>
+            </div>
             <div class="book_quantity">
               <div class="book_counter">
                 <input type="number" min="1" max="${arr[i].quantity}" value="${
@@ -42,7 +43,7 @@ const addBook = (arr) => {
               <button class="book_deleting">
                 <i class="fa fa-trash-o" aria-hidden="true"></i>
               </button>
-            </div>
+            
             </div>
           </div>
         `;
